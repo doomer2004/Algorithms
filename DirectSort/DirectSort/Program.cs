@@ -11,7 +11,7 @@ namespace DirectSort
             var generator = new Generator();
             Stopwatch sw = new Stopwatch();
             var sort = new DirectSort();
-            var size = generator.Generate(2048 , fileName);
+            var size = generator.Generate(16 , fileName);
             var shareSize = size / 8;
             sw.Start();
             sort.Sort(size, shareSize, fileName);
