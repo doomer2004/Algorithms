@@ -3,17 +3,19 @@ internal class DirectSort
 {
     public DirectSort() { }
 
-    public void Sort(int size, string fileA)
+    public void Sort(int size,int shareSize, string fileA)
     {
-        RecSorting(fileA, size, 1);
+        string outputFile = "Output.dat";
+        SortParts(fileA, outputFile, size, shareSize);
+        RecSorting(outputFile, size,shareSize);
     }
 
     private static void RecSorting(string fileA,int size, int sequenceSize)
     {
         while (size > sequenceSize)
         {
-            string fileB = "helpB.txt";
-            string fileC = "helpC.txt";
+            string fileB = "helpB.dat";
+            string fileC = "helpC.dat";
 
             SplitByGroups(fileA, sequenceSize, fileB, fileC);
             MergeParts(fileA, sequenceSize, fileB, fileC);
@@ -23,9 +25,13 @@ internal class DirectSort
 
     private static void MergeParts(string fileA, int groupCount, string fileB, string fileC)
     {
-        using var aWriter = new StreamWriter(fileA);
-        using var bReader = new StreamReader(fileB);
-        using var cReader = new StreamReader(fileC);
+        if (File.Exists(fileA))
+        {
+            File.Delete(fileA);
+        }
+        using var aWriter = new BinaryWriter(File.Open(fileA, FileMode.OpenOrCreate));
+        using var bReader = new BinaryReader(File.Open(fileB, FileMode.OpenOrCreate));
+        using var cReader = new BinaryReader(File.Open(fileC, FileMode.OpenOrCreate));
         var firstNum = GetInt(bReader);
         var secondNum = GetInt(cReader);
         while (firstNum != int.MaxValue || secondNum != int.MaxValue)
@@ -40,7 +46,7 @@ internal class DirectSort
                 {
                     while (!secondFinished)
                     {
-                        aWriter.WriteLine(secondNum);
+                        aWriter.Write(secondNum);
                         secondNum = GetInt(cReader);
                         seconCount++;
                         if (seconCount == groupCount || secondNum==int.MaxValue)
@@ -53,7 +59,7 @@ internal class DirectSort
                 {
                     while (!firstFinished)
                     {
-                        aWriter.WriteLine(firstNum);
+                        aWriter.Write(firstNum);
                         firstNum = GetInt(bReader);
                         firstCount++;
                         if (firstCount == groupCount || firstNum==int.MaxValue)
@@ -66,7 +72,7 @@ internal class DirectSort
                 {
                     if (firstNum < secondNum)
                     {
-                        aWriter.WriteLine(firstNum);
+                        aWriter.Write(firstNum);
                         firstNum = GetInt(bReader);
                         firstCount++;
                         if (firstCount == groupCount || firstNum==int.MaxValue)
@@ -76,7 +82,7 @@ internal class DirectSort
                     }
                     else
                     {
-                        aWriter.WriteLine(secondNum);
+                        aWriter.Write(secondNum);
                         secondNum = GetInt(cReader);
                         seconCount++;
                         if (seconCount == groupCount || secondNum==int.MaxValue)
@@ -89,15 +95,30 @@ internal class DirectSort
         }
     }
 
-    private static int GetInt(StreamReader reader)
+    private static int GetInt(BinaryReader reader)
     {
-        return int.Parse(reader.ReadLine() ?? $"{int.MaxValue}");
+        try
+        {
+            return reader.ReadInt32();
+        }
+        catch (EndOfStreamException)
+        {
+            return int.MaxValue;
+        }
     }
     private static void SplitByGroups(string fileA, int groupCount, string fileB, string fileC)
     {
-        using var aReader = new StreamReader(fileA);
-        using var bWriter = new StreamWriter(fileB);
-        using var cWriter = new StreamWriter(fileC);
+        if (File.Exists(fileB))
+        {
+            File.Delete(fileB);
+        }
+        if (File.Exists(fileC))
+        {
+            File.Delete(fileC);
+        }
+        using var aReader = new BinaryReader(File.Open(fileA, FileMode.OpenOrCreate));
+        using var bWriter = new BinaryWriter(File.Open(fileB, FileMode.OpenOrCreate));
+        using var cWriter = new BinaryWriter(File.Open(fileC, FileMode.OpenOrCreate));
     
         bool isOdd = true;
         int currentNumber = GetInt(aReader);
@@ -108,11 +129,11 @@ internal class DirectSort
                 
                 if (isOdd)
                 {
-                    bWriter.WriteLine(currentNumber);
+                    bWriter.Write(currentNumber);
                 }
                 else
                 {
-                    cWriter.WriteLine(currentNumber);
+                    cWriter.Write(currentNumber);
                 }
 
                 currentNumber = GetInt(aReader);
@@ -121,4 +142,29 @@ internal class DirectSort
             isOdd = !isOdd;
         }
     }
+    
+    public static void SortParts(string fileName, string outputFileName, int size, int shareSize)
+    {
+        if (File.Exists(outputFileName))
+        {
+            File.Delete(outputFileName);
+        }
+        
+        var array = new int[shareSize];
+        using var reader = new BinaryReader(File.Open(fileName, FileMode.Open));
+        using var writer = new BinaryWriter(File.Open(outputFileName, FileMode.OpenOrCreate));
+        for (int i = 0; i < size / shareSize; i++)
+        {
+            for (int j = 0; j < shareSize; j++)
+            {
+                array[j] = reader.ReadInt32();
+            }
+            Array.Sort(array);
+            for (int j = 0; j < shareSize; j++)
+            {
+                writer.Write(array[j]);
+            }
+        }
+    }
+
 }
