@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "I1Fs7SpfFgfSKxpt5tA+WuMx6BP6mmAxYo2pepwYskFqr9wDX4ggqBkZ5d29fa2nGBJC7fpdAwsoqydhIGFl6Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\HP\\Desktop\\PA\\APLabs\\Lab2PA\\Lab2PA\\Lab2PA.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HP\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
