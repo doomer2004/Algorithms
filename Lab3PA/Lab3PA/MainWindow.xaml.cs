@@ -6,9 +6,6 @@ using static Lab3PA.Tree.AVLTree;
 
 namespace Lab3PA
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Node? x;
@@ -61,20 +58,6 @@ namespace Lab3PA
             sw.Close();
         }
 
-        private void Btn_FillRandom(object sender, RoutedEventArgs e)
-        {
-            var txt = textBox1.Text;
-            if (!IsNumeric(txt, out var num))
-            {
-                textBox1.Text = "";
-                return;
-            }
-            x = tree.FillRandom(x, num);
-            textBox1.Text = "";
-            var str = tree.PrintTree(x, 10, 10, "main");
-            textBlock1.Text = str;
-        }
-        
         private void Btn_ReadTree(object sender, RoutedEventArgs e)
         {
             var sr = new StreamReader(path);

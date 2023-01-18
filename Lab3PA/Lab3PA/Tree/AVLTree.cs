@@ -7,26 +7,26 @@ public class AVLTree
 {
     private int Height(Node? node)
     {
-        return node?.height ?? 0;
+        return node?.Height ?? 0;
     }
 
     private int BalanceFactor(Node? node)
     {
-        return Height(node.nodeR) - Height(node.nodeL);
+        return Height(node.NodeR) - Height(node.NodeL);
     }
 
     private void FixHeight(Node? node)
     {
-        var hL = Height(node.nodeL);
-        var hR = Height(node.nodeR);
-        node.height = (hL > hR ? hL : hR) + 1;
+        var hL = Height(node.NodeL);
+        var hR = Height(node.NodeR);
+        node.Height = (hL > hR ? hL : hR) + 1;
     }
 
     private Node? RotateRight(Node? node)
     {
-        var s = node.nodeL;
-        node.nodeL = s.nodeR;
-        s.nodeR = node;
+        var s = node.NodeL;
+        node.NodeL = s.NodeR;
+        s.NodeR = node;
         FixHeight(node);
         FixHeight(s);
         
@@ -35,9 +35,9 @@ public class AVLTree
 
     private Node? RotateLeft(Node? node)
     {
-        var s = node.nodeR;
-        node.nodeR = s.nodeL;
-        s.nodeL = node;
+        var s = node.NodeR;
+        node.NodeR = s.NodeL;
+        s.NodeL = node;
         FixHeight(node);
         FixHeight(s);
         
@@ -49,37 +49,37 @@ public class AVLTree
         FixHeight(node);
         if(BalanceFactor(node) == 2)
         {
-            if(BalanceFactor(node.nodeR) < 0)
-                node.nodeR = RotateRight(node.nodeR);
+            if(BalanceFactor(node.NodeR) < 0)
+                node.NodeR = RotateRight(node.NodeR);
             return RotateLeft(node);
         }
 
         if (BalanceFactor(node) != -2) return node;
-        if(BalanceFactor(node.nodeL) > 0)
-            node.nodeL = RotateLeft(node.nodeL);
+        if(BalanceFactor(node.NodeL) > 0)
+            node.NodeL = RotateLeft(node.NodeL);
         return RotateRight(node);
     }
 
     public Node? Insert(Node? node, int key)
     {
         if (node == null) return new Node(key);
-        if (key < node.key)
-            node.nodeL = Insert(node.nodeL, key);
+        if (key < node.Key)
+            node.NodeL = Insert(node.NodeL, key);
         else
-            node.nodeR = Insert(node.nodeR, key);
+            node.NodeR = Insert(node.NodeR, key);
         return Balance(node);
     }
 
     private Node? FindMin(Node? node)
     {
-        return node.nodeL != null ? FindMin(node.nodeL) : node;
+        return node.NodeL != null ? FindMin(node.NodeL) : node;
     }
 
     private Node? RemoveMin(Node? node)
     {
-        if (node.nodeL == null)
-            return node.nodeR;
-        node.nodeL = RemoveMin(node.nodeL);
+        if (node.NodeL == null)
+            return node.NodeR;
+        node.NodeL = RemoveMin(node.NodeL);
         return Balance(node);
     }
 
@@ -96,22 +96,22 @@ public class AVLTree
     {
         if (node == null) return null;
         
-        if (key < node.key)
-            node.nodeL = Remove(node.nodeL, key);
+        if (key < node.Key)
+            node.NodeL = Remove(node.NodeL, key);
         
-        else if (key > node.key)
-            node.nodeR = Remove(node.nodeR, key);
+        else if (key > node.Key)
+            node.NodeR = Remove(node.NodeR, key);
         
         else
         {
-            var l = node.nodeL;
-            var r = node.nodeR;
+            var l = node.NodeL;
+            var r = node.NodeR;
             
             if (r == null) return l;
             
             var min = FindMin(r);
-            min.nodeR = RemoveMin(r);
-            min.nodeL = l;
+            min.NodeR = RemoveMin(r);
+            min.NodeL = l;
             
             return Balance(min);
         }
@@ -126,12 +126,12 @@ public class AVLTree
 
         var ss = "";
         space += height;
-        ss += PrintTree(root.nodeR, space - 2, height, "right");
+        ss += PrintTree(root.NodeR, space - 2, height, "right");
         if (dir.Equals("main"))
         {
             ss += "\n";
             ss += (new string(' ', (space) * 2 - 4));
-            ss += (root.key);
+            ss += (root.Key);
             ss += "\n";
         }
         else
@@ -140,11 +140,12 @@ public class AVLTree
             ss += (new string(' ', (space - height) * 2));
             if (dir.Equals("right")) ss += ("┌");
             if(dir.Equals("left")) ss += ("└");
-            ss += (new string('-', height - 1));
-            ss += (root.key);
+            ss += (new string('-', height - 2));
+            ss += (new string('>', 1));
+            ss += (root.Key); 
             ss += "\n";
         }
-        ss += PrintTree(root.nodeL, space - 2, height, "left");
+        ss += PrintTree(root.NodeL, space - 2, height, "left");
         return ss;
     }
     
@@ -155,11 +156,11 @@ public class AVLTree
         
         else
         {
-            sw.WriteLine(node.key);
-            sw.WriteLine(node.height);
+            sw.WriteLine(node.Key);
+            sw.WriteLine(node.Height);
             
-            SaveTree(node.nodeL, sw);
-            SaveTree(node.nodeR, sw);
+            SaveTree(node.NodeL, sw);
+            SaveTree(node.NodeR, sw);
         }
     }
 
@@ -174,9 +175,9 @@ public class AVLTree
         if (el.Equals("#") || el.Equals("")) return null;
         var height = sr.ReadLine();
         node = new Node(int.Parse(el), int.Parse(height));
-        node.nodeL = ReadTree(node.nodeL, sr);
-        node.nodeR = ReadTree(node.nodeR, sr);
-        Console.WriteLine(node.key);
+        node.NodeL = ReadTree(node.NodeL, sr);
+        node.NodeR = ReadTree(node.NodeR, sr);
+        Console.WriteLine(node.Key);
         return node;
     }
     
