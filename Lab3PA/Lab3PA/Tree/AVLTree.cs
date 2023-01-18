@@ -29,7 +29,6 @@ public class AVLTree
         s.NodeR = node;
         FixHeight(node);
         FixHeight(s);
-        
         return s;
     }
 
@@ -40,7 +39,6 @@ public class AVLTree
         s.NodeL = node;
         FixHeight(node);
         FixHeight(s);
-        
         return s;
     }
 
@@ -68,6 +66,7 @@ public class AVLTree
         else
             node.NodeR = Insert(node.NodeR, key);
         return Balance(node);
+        Console.WriteLine();
     }
 
     private Node? FindMin(Node? node)
@@ -81,15 +80,6 @@ public class AVLTree
             return node.NodeR;
         node.NodeL = RemoveMin(node.NodeL);
         return Balance(node);
-    }
-
-    public Node? FillRandom(Node? x, int? num)
-    {
-        var rnd = new Random();
-        for (int i = 0; i < num; i++)
-            x = Insert(x, rnd.Next(10000));
-
-        return x;
     }
 
     public Node? Remove(Node? node, int key)
@@ -142,7 +132,7 @@ public class AVLTree
             if(dir.Equals("left")) ss += ("└");
             ss += (new string('-', height - 2));
             ss += (new string('>', 1));
-            ss += (root.Key); 
+            ss += (root.Key);
             ss += "\n";
         }
         ss += PrintTree(root.NodeL, space - 2, height, "left");
@@ -180,6 +170,4 @@ public class AVLTree
         Console.WriteLine(node.Key);
         return node;
     }
-    
-    
 }
